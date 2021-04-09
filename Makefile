@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -pedantic -std=c99
 
 all: kilo etags
 
-kilo: kilo.o terminal.o buffer.o
+kilo: kilo.o terminal.o buffer.o helper.c row.c key.c
 	$(CC) -o $@ $^  $(CFLAGS)
 
 etags:
