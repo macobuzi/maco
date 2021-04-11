@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <string.h>
-#include "kilo.h"
+#include "maco.h"
 
 void editor_handle_key_press() {
 	int c = read_key();

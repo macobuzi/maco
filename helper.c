@@ -1,4 +1,4 @@
-#include "kilo.h"
+#include "maco.h"
 
 struct row *editor_current_row() {
 	return (config.cursor_y < config.num_rows)

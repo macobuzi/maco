@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <termios.h>
-#include "kilo.h"
+#include "maco.h"
 
 void buffer_append(struct buffer *bp, char *s, int len) {
 	char *new_text = realloc(bp->text, bp->len + len);

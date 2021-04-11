@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <string.h>
-#include "kilo.h"
+#include "maco.h"
 
 void editor_append_row(char *text, size_t len) {
 	int i = config.num_rows;
@@ -82,7 +82,6 @@ void editor_draw_rows(struct buffer *bp) {
 			
 		}
 		buffer_append(bp, "\x1b[K", 3); /* Remove screen row from cursor */
-		if (y < config.screen_rows - 1)
-		    buffer_append(bp, "\r\n", 2);
+		buffer_append(bp, "\r\n", 2);
 	}
 }

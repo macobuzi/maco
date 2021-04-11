@@ -1,12 +1,12 @@
 CC = clang
 CFLAGS = -Wall -Wextra -pedantic -std=c99
 
-%.o: %.c kilo.h
+%.o: %.c maco.h
 	$(CC) -c -g -o $@ $< $(CFLAGS)
 
-all: kilo etags
+all: maco etags
 
-kilo: kilo.o terminal.o buffer.o helper.c row.c key.c
+maco: maco.o terminal.o buffer.o helper.c row.c key.c
 	$(CC) -o $@ $^  $(CFLAGS)
 
 etags:
@@ -15,5 +15,5 @@ etags:
 .PHONY = clean
 
 clean:
-	rm kilo *.o TAGS log.txt
+	rm maco *.o TAGS log.txt
 	touch log.txt

@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "kilo.h"
+#include "maco.h"
 
 void die(const char *s) {
 	clear_screen();
