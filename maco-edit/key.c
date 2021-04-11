@@ -64,6 +64,9 @@ void editor_move_cursor(int c) {
 		while (page_size--)
 			editor_move_cursor(c == PAGE_UP ? ARROW_UP : ARROW_DOWN);
 		break;
+	default:
+		editor_insert_char(c);
+		break;
 	}
 
 	// update screen cursors

@@ -55,33 +55,45 @@ enum binding {
 extern FILE* logfp;
 extern struct config config;
 
+/* terminal.c */
 extern void die(const char*);
 extern void disable_raw_mode();
 extern void enable_raw_mode();
 extern void clear_screen();
 extern int  read_key();
 extern int  get_window_size(int *rows, int *cols);
+extern void write_log(char *pattern, int data);
+extern void write_log_str(char *header, char *data);
 
+/* buffer.c */
+extern void buffer_append(struct buffer *bp, char *s, int len);
+extern void buffer_free(struct buffer *bp);
+
+/* maco.c */
 extern void editor_init();
 extern void editor_open(char *filename);
-extern void editor_append_row(char *text, size_t len);
-extern void editor_update_row(struct row *row);
+extern void editor_set_message(const char *fmt, ...);
 extern void editor_draw_screen();
 extern void editor_draw_status_bar(struct buffer *buffer);
 extern void editor_draw_message_bar(struct buffer *buffer);
+
+/* row.c */
+extern void editor_append_row(char *text, size_t len);
+extern void editor_update_row(struct row *row);
 extern void editor_draw_rows();
+extern void editor_row_insert_char(struct row *row, int cursor_x, char c);
+
+/* key.c */
 extern void editor_handle_key_press();
 extern void editor_move_cursor(int c);
 extern void editor_may_scroll();
 extern void editor_may_align();
+
+/* helper.c */
 extern struct row *editor_current_row();
-extern void editor_set_message(const char *fmt, ...);
 extern int editor_cursor_x_to_screen(struct row *row, int cursor_x);
 
-extern void buffer_append(struct buffer *bp, char *s, int len);
-extern void buffer_free(struct buffer *bp);
-
-extern void write_log(char *pattern, int data);
-extern void write_log_str(char *header, char *data);
+/* action.c */
+extern editor_insert_char(char c);
 
 #endif /* MACO_H_ */
