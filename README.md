@@ -1,2 +1,2 @@
-#kilo editor
-ANOTHER...
+#maco editor
+ANOTHER editor based on kilo
