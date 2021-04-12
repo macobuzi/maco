@@ -20,6 +20,7 @@ void editor_append_row(char *text, size_t len) {
 	config.rows[i].render_len = 0;
 	editor_update_row(&config.rows[i]);
 	config.num_rows++;
+	config.dirty++;
 }
 
 void editor_update_row(struct row *row) {
@@ -95,6 +96,7 @@ void editor_row_insert_char(struct row *row, int at, char c) {
 	row->len++;
 	row->text[at] = c;
 	editor_update_row(row);
+	config.dirty++;
 }
 
 char* editor_rows_to_string(int *buffer_len) {
@@ -115,4 +117,14 @@ char* editor_rows_to_string(int *buffer_len) {
 	}
 
 	return buffer;
+}
+
+void editor_row_delete_char(struct row *row, int at) {
+	if (at < 0 || at >= row->len)
+		return;
+
+	memmove(&row->text[at], &row->text[at+1], row->len - at);
+	row->len --;
+	editor_update_row(row);
+	config.dirty ++;
 }

@@ -21,15 +21,14 @@ void editor_handle_key_press() {
 	case BACKSPACE:
 	case CTRL_KEY('h'):
 	case DEL_KEY:
-		/* TODO */
+		editor_delete_char();
 		break;
 	case CTRL_KEY('l'):
 	case '\x1b':                /* ESC */
 		/* TODO */
 		break;
 	case CTRL_KEY('q'):
-		clear_screen();
-		exit(0);
+		quit();
 		break;
 	case CTRL_KEY('s'):
 		editor_save();

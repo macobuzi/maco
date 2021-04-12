@@ -9,6 +9,7 @@
 #define CTRL_KEY(k) ((k) & 0x1F)
 #define VERSION "0.0.1"
 #define TAB_SIZE 8
+#define QUIT_TIME 3
 
 struct row {
 	char *text;
@@ -40,6 +41,7 @@ struct config {
 	char *filename;
 	char status_msg[80];
 	time_t status_msg_time;
+	int dirty;
 };
 
 enum binding {
@@ -56,6 +58,7 @@ enum binding {
 
 extern FILE* logfp;
 extern struct config config;
+extern int quit_time;
 
 /* terminal.c */
 extern void die(const char*);
@@ -83,7 +86,8 @@ extern void editor_draw_message_bar(struct buffer *buffer);
 extern void editor_append_row(char *text, size_t len);
 extern void editor_update_row(struct row *row);
 extern void editor_draw_rows();
-extern void editor_row_insert_char(struct row *row, int cursor_x, char c);
+extern void editor_row_insert_char(struct row *row, int at, char c);
+extern void editor_row_delete_char(struct row *row, int at);
 extern char* editor_rows_to_string(int *buffer_len);
 
 /* key.c */
@@ -98,6 +102,8 @@ extern int editor_cursor_x_to_screen(struct row *row, int cursor_x);
 
 /* action.c */
 extern void editor_insert_char(char c);
+extern void editor_delete_char();
 extern void editor_save();
+extern void quit();
 
 #endif /* MACO_H_ */

@@ -12,6 +12,7 @@
 
 struct config config;
 FILE *logfp;
+int quit_time = QUIT_TIME;
 
 void editor_draw_screen() {
 	struct buffer main_buffer = EMPTY_BUFFER;
@@ -43,9 +44,10 @@ void editor_draw_status_bar(struct buffer *bp) {
 	buffer_append(bp, "\x1b[7m", 4);
 
 	ll = snprintf(lstat, sizeof(lstat),
-				 " %.20s - %d line",
+				 " %.20s - %d line %s",
 				 config.filename ? config.filename : "[No Name]", /* file name */
-				 config.num_rows                                  /* row nums  */
+				 config.num_rows,                                 /* row nums  */
+				 config.dirty > 0 ? "(modified)" : ""             /* modified  */ 
 	);
 	rl = snprintf(rstat, sizeof(rstat),
 				  "%d/%d ",
@@ -87,6 +89,7 @@ void editor_init() {
 	config.rows = NULL;
 	config.status_msg[0] = '\0';
 	config.status_msg_time = 0;
+	config.dirty = 0;
 
 	if (get_window_size(&config.screen_rows, &config.screen_cols) == -1)
 		die("get_window_size");
@@ -114,6 +117,7 @@ void editor_open(char *filename) {
 	}
 	free(text);
 	fclose(fp);
+	config.dirty = 0;
 }
 
 void editor_set_message(const char *fmt, ...) {
