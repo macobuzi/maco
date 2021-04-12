@@ -14,10 +14,25 @@ void editor_handle_key_press() {
 //	write_log("key = %d\n", c);
 	
 	switch(c) {
-		
+
+	case '\r':                  /* LINE FEED */
+		/* TODO */
+		break;
+	case BACKSPACE:
+	case CTRL_KEY('h'):
+	case DEL_KEY:
+		/* TODO */
+		break;
+	case CTRL_KEY('l'):
+	case '\x1b':                /* ESC */
+		/* TODO */
+		break;
 	case CTRL_KEY('q'):
 		clear_screen();
 		exit(0);
+		break;
+	case CTRL_KEY('s'):
+		editor_save();
 		break;
 	case ARROW_UP:
 	case ARROW_DOWN:
@@ -28,6 +43,7 @@ void editor_handle_key_press() {
 		editor_move_cursor(c);
 		break;
 	default:
+		editor_insert_char(c);
 		break;
 	}	
 }
@@ -36,7 +52,6 @@ void editor_move_cursor(int c) {
 	int page_size;
 	struct row *row = editor_current_row();
 
-	// update rows cursor
 	switch(c) {
 	case ARROW_LEFT:
 		if (config.cursor_x > 0)
@@ -65,7 +80,6 @@ void editor_move_cursor(int c) {
 			editor_move_cursor(c == PAGE_UP ? ARROW_UP : ARROW_DOWN);
 		break;
 	default:
-		editor_insert_char(c);
 		break;
 	}
 

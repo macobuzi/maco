@@ -43,12 +43,14 @@ struct config {
 };
 
 enum binding {
+	BACKSPACE = 127,
 	ARROW_LEFT = 1000,
 	ARROW_RIGHT,
 	ARROW_UP,
 	ARROW_DOWN,
 	PAGE_UP,
-	PAGE_DOWN
+	PAGE_DOWN,
+	DEL_KEY
 };
 
 
@@ -82,6 +84,7 @@ extern void editor_append_row(char *text, size_t len);
 extern void editor_update_row(struct row *row);
 extern void editor_draw_rows();
 extern void editor_row_insert_char(struct row *row, int cursor_x, char c);
+extern char* editor_rows_to_string(int *buffer_len);
 
 /* key.c */
 extern void editor_handle_key_press();
@@ -94,6 +97,7 @@ extern struct row *editor_current_row();
 extern int editor_cursor_x_to_screen(struct row *row, int cursor_x);
 
 /* action.c */
-extern editor_insert_char(char c);
+extern void editor_insert_char(char c);
+extern void editor_save();
 
 #endif /* MACO_H_ */

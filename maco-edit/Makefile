@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -pedantic -std=c99
 
 all: maco etags
 
-maco: maco.o terminal.o buffer.o helper.c row.c key.c
+maco: maco.o terminal.o buffer.o helper.o row.o key.o action.o
 	$(CC) -o $@ $^  $(CFLAGS)
 
 etags:

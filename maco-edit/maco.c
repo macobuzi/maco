@@ -93,7 +93,7 @@ void editor_init() {
     // remove 2 row for status bar and message bar
     config.screen_rows-=2;
 
-	editor_set_message("HELP: C-Q = Quit");
+	editor_set_message("HELP: C-S = save | C-Q = Quit");
 }
 
 void editor_open(char *filename) {

@@ -58,6 +58,8 @@ int read_key() {
 					return c;
 				if (buf[2] == '~') {
 					switch(buf[1]) {
+					case '3':
+						return DEL_KEY;
 					case '5':
 						return PAGE_UP;
 					case '6':

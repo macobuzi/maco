@@ -85,3 +85,34 @@ void editor_draw_rows(struct buffer *bp) {
 		buffer_append(bp, "\r\n", 2);
 	}
 }
+
+void editor_row_insert_char(struct row *row, int at, char c) {
+	if (at < 0 || at > row->len) {
+		at = row->len;
+	}
+	row->text = realloc(row->text, row->len + 2);
+	memmove(&row->text[at + 1], &row->text[at], row->len - at + 1);
+	row->len++;
+	row->text[at] = c;
+	editor_update_row(row);
+}
+
+char* editor_rows_to_string(int *buffer_len) {
+	int charcnt, i;
+	char *buffer, *bp;
+
+	for (charcnt = 0, i = 0; i < config.num_rows; i++)
+		charcnt += config.rows[i].len + 1;
+	*buffer_len = charcnt;
+
+	buffer = malloc(charcnt);
+	bp = buffer;
+	for (i = 0; i < config.num_rows; i++) {
+		memcpy(bp, config.rows[i].text, config.rows[i].len);
+		bp += config.rows[i].len;
+		*bp = '\n';
+		bp++;
+	}
+
+	return buffer;
+}
