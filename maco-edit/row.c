@@ -9,6 +9,8 @@
 #include "maco.h"
 
 void editor_insert_row(int at, char *text, size_t len) {
+	write_log("editor_insert_row \n", 0);
+	
 	config.rows = realloc(config.rows, sizeof(struct row) * (config.num_rows + 1));
 
 	memmove(&config.rows[at+1], &config.rows[at], sizeof(struct row) * (config.num_rows - at));
@@ -28,7 +30,9 @@ void editor_update_row(struct row *row) {
 	int i, j, k, tab_num, len;
 	char c;
 
-	write_log("free row render text\n",0);
+	write_log("editor_update_row \n",0);
+	if (row == NULL)
+		write_log("editor_update_row row == NULL\n",0); 
 	free(row->render_text);
 
 	tab_num = 0;
@@ -48,11 +52,14 @@ void editor_update_row(struct row *row) {
 		while (k--) 
 			row->render_text[j++] = c;
 	}
+	write_log_str("Finish update row render text", row->render_text);
 	row->render_text[j] = '\0';
 	row->render_len = j;
 }
 
 void editor_draw_rows(struct buffer *bp) {
+//	write_log("editor_draw_rows \n",0);
+	
 	int y, r;
 	
 	for (y=0; y<config.screen_rows; y++) {
@@ -92,6 +99,8 @@ void editor_draw_rows(struct buffer *bp) {
 }
 
 void editor_row_insert_char(struct row *row, int at, char c) {
+	write_log("editor_row_insert_char %c\n", c);
+	
 	if (at < 0 || at > row->len) {
 		at = row->len;
 	}
@@ -124,6 +133,8 @@ char* editor_rows_to_string(int *buffer_len) {
 }
 
 void editor_row_delete_char(struct row *row, int at) {
+	write_log("editor_row_delete_char at=%d\n", at);
+	
 	if (at < 0 || at >= row->len)
 		return;
 
@@ -134,6 +145,8 @@ void editor_row_delete_char(struct row *row, int at) {
 }
 
 void editor_row_delete(int at) {
+	write_log("editor_row_delete at=%d \n", at);
+	
 	if (at < 0 || at >= config.num_rows)
 		return;
 	editor_row_free(&config.rows[at]);
@@ -149,6 +162,8 @@ void editor_row_free(struct row *row) {
 }
 
 void editor_row_append_string(struct row *row, char *text, size_t len) {
+	write_log_str("editor_row_append_string", text);
+	
 	row->text = realloc(row->text, row->len + len + 1);
 	memcpy(&row->text[row->len], text, len);
 	row->len += len;

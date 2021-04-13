@@ -4,6 +4,8 @@
 #include "maco.h"
 
 void buffer_append(struct buffer *bp, char *s, int len) {
+	//write_log_str("buffer_append (screen)", s);
+	
 	char *new_text = realloc(bp->text, bp->len + len);
 
 	if (new_text == NULL) return;
@@ -13,6 +15,6 @@ void buffer_append(struct buffer *bp, char *s, int len) {
 }
 
 void buffer_free(struct buffer *bp) {
-	write_log("free screen buffer \n", 0);
+	write_log("buffer_free (screen) \n", 0);
 	free(bp->text);
 }

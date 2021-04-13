@@ -6,6 +6,7 @@
 #include "maco.h"
 
 void editor_insert_char(char c) {
+	write_log("editor_insert_char %c\n",c);
 	if (config.cursor_y == config.num_rows)
 		editor_insert_row(config.num_rows, "", 0);
 	editor_row_insert_char(&config.rows[config.cursor_y], config.cursor_x, c);
@@ -53,6 +54,8 @@ void quit() {
 }
 
 void editor_delete_char() {
+	write_log("editor_delete_char\n",0);
+	
 	struct row *row, *up_row;
 	
 	if (config.cursor_y == config.num_rows)
@@ -75,6 +78,8 @@ void editor_delete_char() {
 }
 
 void editor_insert_new_row() {
+	write_log("editor_insert_new_row\n",0);
+	
 	struct row *row;
 
 	row = editor_current_row();
@@ -91,6 +96,8 @@ void editor_insert_new_row() {
 }
 
 char* editor_prompt(char *prompt) {
+	write_log("editor_prompt\n",0);
+	
 	char *buffer = malloc(PROMPT_SIZE);
 	int len = 0;
 	

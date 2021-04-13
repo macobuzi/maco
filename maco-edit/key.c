@@ -10,7 +10,7 @@
 
 void editor_handle_key_press() {
 	int c = read_key();
-
+	write_log("handle_key_press key=%d\n",c);
 //	write_log("key = %d\n", c);
 	
 	switch(c) {
@@ -63,6 +63,7 @@ void editor_handle_key_press() {
 }
 
 void editor_move_cursor(int c) {
+	write_log("editor_move_cursor %d \n", c);
 	int page_size;
 	struct row *row = editor_current_row();
 
@@ -108,11 +109,12 @@ void editor_move_cursor(int c) {
 		config.screen_cursor_x = editor_cursor_x_to_screen(row, config.cursor_x);
 
 	// follow up... 
-	editor_may_scroll();
-	editor_may_align();
+	//editor_may_scroll();
+	//editor_may_align();
 }
 
 void editor_may_align() {
+	write_log("editor_may_align\n",0);
 	struct row *row = editor_current_row();
 	int len = row ? row->len : 0;
 //	write_log("row len = %d\n", len);
@@ -128,7 +130,8 @@ void editor_may_scroll() {
 //	write_log("oy = %d\n", config.offset_y);
 //	write_log("cx = %d\n", config.cursor_x);
 //	write_log("scx = %d\n", config.screen_cursor_x);	
-	
+
+	write_log("editor_may_scroll\n",0);
 	if (config.cursor_y < config.offset_y)
 		config.offset_y = config.cursor_y;
 	if (config.cursor_y >= config.offset_y + config.screen_rows)

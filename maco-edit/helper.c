@@ -8,6 +8,7 @@ struct row *editor_current_row() {
 int editor_cursor_x_to_screen(struct row *row, int cursor_x) {
 	int i, scr;
 
+	write_log("editor_cursor_x_to_screen cursor_x = %d\n", cursor_x);
 	for (i=0, scr=0; i < cursor_x && i < row->len; i++)
 		if (row->text[i] == '\t') scr += TAB_SIZE;
 		else scr++;
