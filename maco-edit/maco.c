@@ -113,8 +113,9 @@ void editor_open(char *filename) {
 		while (len > 0 && (text[len-1] == '\n' || text[len-1] == '\r'))
 			len--;
 		text[len] = '\0';
-		editor_append_row(text, len);
+		editor_insert_row(config.num_rows, text, len);
 	}
+	write_log("free open buffer \n", 0);
 	free(text);
 	fclose(fp);
 	config.dirty = 0;
@@ -136,6 +137,8 @@ int main(int argc, char *argv[]) {
 
 	if (argc >= 2) {
 		editor_open(argv[1]);
+	} else {
+		editor_insert_row(0, "\0", 0);
 	}
 
     while (1) {

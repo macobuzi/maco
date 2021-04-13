@@ -13,5 +13,6 @@ void buffer_append(struct buffer *bp, char *s, int len) {
 }
 
 void buffer_free(struct buffer *bp) {
+	write_log("free screen buffer \n", 0);
 	free(bp->text);
 }

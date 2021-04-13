@@ -8,31 +8,35 @@
 #include <string.h>
 #include "maco.h"
 
-void editor_append_row(char *text, size_t len) {
-	int i = config.num_rows;
+void editor_insert_row(int at, char *text, size_t len) {
+	config.rows = realloc(config.rows, sizeof(struct row) * (config.num_rows + 1));
 
-	config.rows = realloc(config.rows, sizeof(struct row) * (i + 1));
-	config.rows[i].len = len;
-	config.rows[i].text = malloc(len + 1);
-	memcpy(config.rows[i].text, text, len + 1);
+	memmove(&config.rows[at+1], &config.rows[at], sizeof(struct row) * (config.num_rows - at));
 
-	config.rows[i].render_text = NULL;
-	config.rows[i].render_len = 0;
-	editor_update_row(&config.rows[i]);
+	config.rows[at].len = len;
+	config.rows[at].text = malloc(len + 1);
+	memcpy(config.rows[at].text, text, len + 1);
+
+	config.rows[at].render_text = NULL;
+	config.rows[at].render_len = 0;
+	editor_update_row(&config.rows[at]);
 	config.num_rows++;
 	config.dirty++;
 }
 
 void editor_update_row(struct row *row) {
-	int i, j, k, tab_num;
+	int i, j, k, tab_num, len;
 	char c;
-	
+
+	write_log("free row render text\n",0);
 	free(row->render_text);
 
 	tab_num = 0;
 	for (i=0; i<row->len; i++)
 		if (row->text[i] == '\t') tab_num++;
-	row->render_text = malloc(row->len + tab_num * (TAB_SIZE - 1) + 1);
+	len = row->len + tab_num * (TAB_SIZE - 1) + 1;
+	write_log("update malloc len = %d\n", len);
+	row->render_text = malloc(len);
 
 	for (i=0, j=0; i<row->len; i++) {
 		k = 1;
@@ -125,6 +129,30 @@ void editor_row_delete_char(struct row *row, int at) {
 
 	memmove(&row->text[at], &row->text[at+1], row->len - at);
 	row->len --;
+	editor_update_row(row);
+	config.dirty ++;
+}
+
+void editor_row_delete(int at) {
+	if (at < 0 || at >= config.num_rows)
+		return;
+	editor_row_free(&config.rows[at]);
+	memmove(&config.rows[at], &config.rows[at+1], sizeof(struct row) * (config.num_rows - at - 1));
+	config.num_rows --;
+	config.dirty ++;
+}
+
+void editor_row_free(struct row *row) {
+	write_log("free row render text and text\n",0);
+	free(row->render_text);
+	free(row->text);
+}
+
+void editor_row_append_string(struct row *row, char *text, size_t len) {
+	row->text = realloc(row->text, row->len + len + 1);
+	memcpy(&row->text[row->len], text, len);
+	row->len += len;
+	row->text[row->len] = '\0';
 	editor_update_row(row);
 	config.dirty ++;
 }

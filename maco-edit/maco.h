@@ -10,6 +10,7 @@
 #define VERSION "0.0.1"
 #define TAB_SIZE 8
 #define QUIT_TIME 3
+#define PROMPT_SIZE 128
 
 struct row {
 	char *text;
@@ -52,7 +53,9 @@ enum binding {
 	ARROW_DOWN,
 	PAGE_UP,
 	PAGE_DOWN,
-	DEL_KEY
+	DEL_KEY,
+	LINE_END,
+	LINE_START
 };
 
 
@@ -83,12 +86,15 @@ extern void editor_draw_status_bar(struct buffer *buffer);
 extern void editor_draw_message_bar(struct buffer *buffer);
 
 /* row.c */
-extern void editor_append_row(char *text, size_t len);
+extern void editor_insert_row(int at, char *text, size_t len);
 extern void editor_update_row(struct row *row);
 extern void editor_draw_rows();
 extern void editor_row_insert_char(struct row *row, int at, char c);
 extern void editor_row_delete_char(struct row *row, int at);
 extern char* editor_rows_to_string(int *buffer_len);
+extern void editor_row_delete(int at);
+extern void editor_row_free(struct row *row);
+extern void editor_row_append_string(struct row *row, char *text, size_t len);
 
 /* key.c */
 extern void editor_handle_key_press();
@@ -103,7 +109,9 @@ extern int editor_cursor_x_to_screen(struct row *row, int cursor_x);
 /* action.c */
 extern void editor_insert_char(char c);
 extern void editor_delete_char();
+extern void editor_insert_new_row();
 extern void editor_save();
+extern char* editor_prompt(char *prompt);
 extern void quit();
 
 #endif /* MACO_H_ */

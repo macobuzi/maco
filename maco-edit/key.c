@@ -16,9 +16,9 @@ void editor_handle_key_press() {
 	switch(c) {
 
 	case '\r':                  /* LINE FEED */
-		/* TODO */
+		editor_insert_new_row();
 		break;
-	case BACKSPACE:
+//	case BACKSPACE:
 	case CTRL_KEY('h'):
 	case DEL_KEY:
 		editor_delete_char();
@@ -33,16 +33,31 @@ void editor_handle_key_press() {
 	case CTRL_KEY('s'):
 		editor_save();
 		break;
+	case CTRL_KEY('v'):
+		editor_move_cursor(PAGE_DOWN);
+		break;
+	case CTRL_KEY('z'):
+		editor_move_cursor(PAGE_UP);
+		break;
+	case CTRL_KEY('a'):
+		editor_move_cursor(LINE_START);
+		break;
+	case CTRL_KEY('e'):
+		editor_move_cursor(LINE_END);
+		break;
 	case ARROW_UP:
 	case ARROW_DOWN:
 	case ARROW_RIGHT:
 	case ARROW_LEFT:
 	case PAGE_UP:
 	case PAGE_DOWN:
+	case LINE_END:
+	case LINE_START:
 		editor_move_cursor(c);
 		break;
 	default:
-		editor_insert_char(c);
+		if (!iscntrl(c) && c < 128)
+		 editor_insert_char(c);
 		break;
 	}	
 }
@@ -77,6 +92,12 @@ void editor_move_cursor(int c) {
 		page_size = config.screen_cols;
 		while (page_size--)
 			editor_move_cursor(c == PAGE_UP ? ARROW_UP : ARROW_DOWN);
+		break;
+	case LINE_END:
+		config.cursor_x = row->len;
+		break;
+	case LINE_START:
+		config.cursor_x = 0;
 		break;
 	default:
 		break;
