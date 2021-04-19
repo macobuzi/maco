@@ -1,0 +1,81 @@
+
+action.c,173
+void editor_insert_char(8,117
+void editor_save(16,391
+void quit(43,1019
+void editor_delete_char(56,1256
+void editor_insert_new_row(80,1872
+char* editor_prompt(98,2306
+
+buffer.c,50
+void buffer_append(6,80
+void buffer_free(17,350
+
+hello.c,15
+int main(3,20
+
+helper.c,93
+struct row *editor_current_row(editor_current_row3,19
+int editor_cursor_x_to_screen(8,143
+
+key.c,135
+void editor_handle_key_press(11,180
+void editor_move_cursor(65,1165
+void editor_may_align(116,2239
+void editor_may_scroll(126,2527
+
+maco.c,290
+struct config config;13,218
+FILE *logfp;logfp14,240
+int quit_time 15,253
+void editor_draw_screen(17,281
+void editor_draw_status_bar(40,1163
+void editor_draw_message_bar(72,2046
+void editor_init(81,2317
+void editor_open(102,2838
+void editor_set_message(124,3305
+int main(132,3507
+
+row.c,311
+void editor_insert_row(11,180
+void editor_update_row(29,718
+void editor_draw_rows(60,1424
+void editor_row_insert_char(101,2471
+char* editor_rows_to_string(115,2824
+void editor_row_delete_char(135,3233
+void editor_row_delete(147,3501
+void editor_row_free(158,3805
+void editor_row_append_string(164,3940
+
+terminal.c,207
+void die(10,160
+void disable_raw_mode(16,229
+void enable_raw_mode(21,346
+int read_key(38,790
+void clear_screen(86,1637
+int get_window_size(91,1736
+void write_log(103,1951
+void write_log_str(108,2044
+
+maco.h,447
+#define MACO_H_2,16
+#define EMPTY_BUFFER 8,92
+#define CTRL_KEY(9,123
+#define VERSION 10,156
+#define TAB_SIZE 11,180
+#define QUIT_TIME 12,199
+#define PROMPT_SIZE 13,219
+struct row 15,244
+struct buffer 22,321
+struct config 27,364
+enum binding 48,713
+	BACKSPACE 49,728
+	ARROW_LEFT 50,746
+	ARROW_RIGHT,51,766
+	ARROW_UP,52,780
+	ARROW_DOWN,53,791
+	PAGE_UP,54,804
+	PAGE_DOWN,55,814
+	DEL_KEY,56,826
+	LINE_END,57,836
+	LINE_START58,847
