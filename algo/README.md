@@ -15,7 +15,7 @@ A. Solving strategy:
 	  - Simulation if too complex then may be it is math problem (generating solution directly)
 	  
 
-B. Common algorithm:
+B. Common algorithm - data structure:
   1. Binary search: note:
        - return low, which is rank of search element in sorted array
 	   - how to prove: analyse last computing before halting
@@ -29,3 +29,6 @@ B. Common algorithm:
   7. Dijkstra SSSP algorithms is greedy, BellmanFord is dp
   8. Dequeue is helpful for keeping invariant (to optimized)
   9. 2 stack or 2 queue solution
+  10. DFS, BFS, FloodFill
+  11. DSU
+  12. Trie, pass trie node along recursive computation step
