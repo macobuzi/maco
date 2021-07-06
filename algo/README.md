@@ -32,3 +32,11 @@ B. Common algorithm - data structure:
   10. DFS, BFS, FloodFill
   11. DSU
   12. Trie, pass trie node along recursive computation step
+
+C. Major Topic:
+The Major Five topics are:-
+  1. Ad hoc/ Implementation Problems
+  2. Programming Paradigm(Greedy, backtracking, branch and bound, DP, Divide and Conquer, Brute force etc.)
+  3. Graph Theory(directed, undirected, weighted, rooted(IN & OUT) and unrooted tree, DAG etc.)
+  4. Math(Number theory, Computational Geometry, Combinatorics, Linear Algebra etc.)
+  5. Others(String Processing, Bit Manipulation etc.)
