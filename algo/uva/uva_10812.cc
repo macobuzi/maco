@@ -3,14 +3,7 @@
 using namespace std;
 
 int main() {
-	/*
-	  a + b  = S
-      a - b  = D
-	  a = (S+D)/2
-	  b = (S-D)/2
-	*/
-
-	int n;
+  	int n;
 	cin >> n;
 	while (n-- > 0) {
 		long long s,d;
