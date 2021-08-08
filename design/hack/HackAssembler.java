@@ -118,6 +118,35 @@ public class HackAssembler {
 			}
 		}
 	}
+	
+	private static class SymbolTable {
+		private Map<String, Integer> internal;
+		
+		public SymbolTable() {
+			internal = new TreeMap<>();
+		}
+		
+		public void addEntry(String symbol, int address) {
+			internal.put(symbol, address);
+		}
+		
+		public boolean contains(String symbol) {
+			return internal.containsKey(symbol);
+		}
+		
+		public int getAddress(String symbol) {
+			if (!contains(symbol)) {
+				throw new IllegalArgumentException("Symbol " + symbol + " is not existed.");
+			}
+			return internal.get(symbol);
+		}
+		
+		public void print() {
+			for (String key : internal.keySet()) {
+				System.out.printf("Label %s -> %d\n", key, internal.get(key));
+			}
+		}
+	}
 
 	private static class Parser {
 		private Scanner in;
@@ -126,6 +155,7 @@ public class HackAssembler {
 		private String cmdDest;
 		private String cmdJump;
 		private String cmdComp;
+		private String cmdText;
 
 		public Parser(FileInputStream asmInStream) {
 			in = new Scanner(asmInStream);
@@ -134,7 +164,7 @@ public class HackAssembler {
 		public boolean hasMoreCommands() {
 			return in.hasNext();
 		}
-
+		
 		public void advance() {
 			cmdType = null;
 			cmdSymbol = null;
@@ -150,11 +180,17 @@ public class HackAssembler {
 				return;
 			}
 			
-			System.out.println("Cmd : " + line);
+			// Remove comment
+			line = line.split("//")[0].trim();
+			
+			cmdText = line;
 			
 			if (line.startsWith("@")) {
 				cmdType = CommandType.A_COMMAND;
 				cmdSymbol = line.substring(1);
+			} else if (line.startsWith("(")) {
+				cmdType = CommandType.L_COMMAND;
+				cmdSymbol = line.substring(1, line.length()-1).trim();
 			} else {
 				cmdType = CommandType.C_COMMAND;
 				
@@ -198,6 +234,23 @@ public class HackAssembler {
 		public String jump() {
 			return cmdJump;
 		}
+		
+		public String text() {
+			return cmdText;
+		}
+	}
+	
+	private static void addPredefineRAMAddr(SymbolTable symTbl) {
+		symTbl.addEntry("SP", 0);
+		symTbl.addEntry("LCL", 1);
+		symTbl.addEntry("ARG", 2);
+		symTbl.addEntry("THIS", 3);
+		symTbl.addEntry("THAT", 4);
+		symTbl.addEntry("SCREEN", 16384);
+		symTbl.addEntry("KBD", 24576);
+		for(int i=0; i<16; i++) {
+			symTbl.addEntry("R" + i, i);
+		}
 	}
 
 	public static void main(String[] argv) throws Exception {
@@ -214,29 +267,63 @@ public class HackAssembler {
 			nameWoExt = asmFileName;
 		}
 		String hackFileName = nameWoExt + ".hack";
+		
+		SymbolTable symTbl = new SymbolTable();
+		addPredefineRAMAddr(symTbl);
+		Parser labelParser = new Parser(new FileInputStream(asmFileName));
+		int romAddr = 0;
+		while (labelParser.hasMoreCommands()) {
+			labelParser.advance();
+			CommandType cmdType = labelParser.commandType();
+			switch (cmdType) {
+				case A_COMMAND:
+				case C_COMMAND:
+					romAddr++;
+					break;
+				case L_COMMAND:
+					symTbl.addEntry(labelParser.symbol(), romAddr);
+					break;
+			}
+		}
 
 		PrintWriter writer = new PrintWriter(new FileWriter(hackFileName));
 		Parser parser = new Parser(new FileInputStream(asmFileName));
 		Code code = new Code();
+		int nextFreeRAMAddr = 16;
+		System.out.println("=== Listing ===");
+		romAddr = 0;
 		while (parser.hasMoreCommands()) {
 			parser.advance();
 			CommandType cmdType = parser.commandType();
 			switch (cmdType) {
 			case A_COMMAND:
 				writer.print("0");
-				writer.print(String.format("%15s", Integer.toBinaryString(Integer.parseInt(parser.symbol()))).replace(" ", "0"));
+				Integer ramAddr = null;
+				try {
+					ramAddr = Integer.parseInt(parser.symbol());
+				} catch(Exception ex) {
+					if (!symTbl.contains(parser.symbol())) {
+						symTbl.addEntry(parser.symbol(), nextFreeRAMAddr);
+						nextFreeRAMAddr++;
+					}
+					ramAddr = symTbl.getAddress(parser.symbol());
+				}
+				writer.print(String.format("%15s\n", Integer.toBinaryString(ramAddr)).replace(" ", "0"));
+				System.out.printf("%05d %s\n", ++romAddr, parser.text());
 				break;
 			case C_COMMAND:
 				writer.print("111");
 				writer.printf("%s", code.comp(parser.comp()));
 				writer.printf("%s", code.dest(parser.dest()));
 				writer.printf("%s", code.jump(parser.jump()));
-				break;
-			case L_COMMAND:
+				writer.print("\n");
+				System.out.printf("%05d %s\n", ++romAddr, parser.text());
 				break;
 			}
-			writer.print("\n");
 		}
 		writer.close();
+		
+		System.out.println("=== Symbol ===");
+		symTbl.print();
 	}
 }
