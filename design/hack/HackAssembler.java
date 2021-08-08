@@ -224,7 +224,7 @@ public class HackAssembler {
 			switch (cmdType) {
 			case A_COMMAND:
 				writer.print("0");
-				writer.printf("%015d", Long.parseLong(parser.symbol()));
+				writer.print(String.format("%15s", Integer.toBinaryString(Integer.parseInt(parser.symbol()))).replace(" ", "0"));
 				break;
 			case C_COMMAND:
 				writer.print("111");
